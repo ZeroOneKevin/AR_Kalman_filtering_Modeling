@@ -2,39 +2,13 @@ AR_Kalman_filtering Model
 
 An autoregression model(AR model）could be written as
 
-<a href="https://www.codecogs.com/eqnedit.php?latex=x_{t}&space;=&space;\phi{{n1}}&space;x{{t-1}}&plus;\phi{{n2}}&space;x{{t-2}}&plus;...&plus;\phi{{nn}}&space;x{_{t-n}}&plus;\varepsilon_t" target="_blank"><img src="https://latex.codecogs.com/png.latex?x_{t}&space;=&space;\phi{{n1}}&space;x{{t-1}}&plus;\phi{{n2}}&space;x{{t-2}}&plus;...&plus;\phi{{nn}}&space;x{_{t-n}}&plus;\varepsilon_t" title="x_{t} = \phi{{n1}} x{{t-1}}+\phi{{n2}} x{{t-2}}+...+\phi{{nn}} x{_{t-n}}+\varepsilon_t" /></a>
+<a href="https://www.codecogs.com/eqnedit.php?latex=x_{t}&space;=&space;\phi{_{n1}}&space;x{{t-1}}&plus;\phi{_{n2}}&space;x{{t-2}}&plus;...&plus;\phi{_{nn}}&space;x{_{t-n}}&plus;\varepsilon_t" target="_blank"><img src="https://latex.codecogs.com/png.latex?x_{t}&space;=&space;\phi{_{n1}}&space;x{{t-1}}&plus;\phi{_{n2}}&space;x{{t-2}}&plus;...&plus;\phi{_{nn}}&space;x{_{t-n}}&plus;\varepsilon_t" title="x_{t} = \phi{_{n1}} x{{t-1}}+\phi{_{n2}} x{{t-2}}+...+\phi{_{nn}} x{_{t-n}}+\varepsilon_t" /></a>
 
 Transfer multiple AR models into a state space below：
-$$
-       \begin{pmatrix}
-        x_{_1}^{_t+_1}  \\
-        x_{_2}^{_t+_1}   \\
-        \vdots\\
-        x_{_n}^{_t+_1}   \\
-        \end{pmatrix}
-        = 
-        \begin{pmatrix}
-        \phi_{_{11}} ^{_t}& 0 & 0 & \cdots & 0 \\
-        \phi_{_{21}}^{_t} & \phi_{_{22}}^{_t} & 0 & \cdots & 0 \\
-        \vdots & \vdots & \vdots & \ddots & \vdots \\
-         \phi_{_{n1}}^{_t} &  \phi_{_{n2}}^{_t} &  \phi_{_{n3}}^{_t} & \cdots &  \phi_{_{nn}}^{_t} \\
-        \end{pmatrix} 
-        \begin{pmatrix}
-        x_{_1}^{_t}  \\
-        x_{_2}^{_t}   \\
-        \vdots\\
-        x_{_n}^{_t}   \\
-        \end{pmatrix}+
-        \begin{pmatrix}
-        \varepsilon_{_1}^{_t}  \\
-        \varepsilon_{_2}^{_t}   \\
-        \vdots\\
-        \varepsilon_{_n}^{_t}   \\
-        \end{pmatrix}w_t
-$$
 
-$$
-        y^{_{t+1}}= x_{_n}^{_{t+1}}+v^{_{t+1}}
-$$
+<a href="https://www.codecogs.com/eqnedit.php?latex=\begin{pmatrix}&space;x_{_1}^{_t&plus;_1}&space;\\&space;x_{_2}^{_t&plus;_1}&space;\\&space;\vdots\\&space;x_{_n}^{_t&plus;_1}&space;\\&space;\end{pmatrix}&space;=&space;\begin{pmatrix}&space;\phi_{_{11}}&space;^{_t}&&space;0&space;&&space;0&space;&&space;\cdots&space;&&space;0&space;\\&space;\phi_{_{21}}^{_t}&space;&&space;\phi_{_{22}}^{_t}&space;&&space;0&space;&&space;\cdots&space;&&space;0&space;\\&space;\vdots&space;&&space;\vdots&space;&&space;\vdots&space;&&space;\ddots&space;&&space;\vdots&space;\\&space;\phi_{_{n1}}^{_t}&space;&&space;\phi_{_{n2}}^{_t}&space;&&space;\phi_{_{n3}}^{_t}&space;&&space;\cdots&space;&&space;\phi_{_{nn}}^{_t}&space;\\&space;\end{pmatrix}&space;\begin{pmatrix}&space;x_{_1}^{_t}&space;\\&space;x_{_2}^{_t}&space;\\&space;\vdots\\&space;x_{_n}^{_t}&space;\\&space;\end{pmatrix}&plus;&space;\begin{pmatrix}&space;\varepsilon_{_1}^{_t}&space;\\&space;\varepsilon_{_2}^{_t}&space;\\&space;\vdots\\&space;\varepsilon_{_n}^{_t}&space;\\&space;\end{pmatrix}w_t" target="_blank"><img src="https://latex.codecogs.com/png.latex?\begin{pmatrix}&space;x_{_1}^{_t&plus;_1}&space;\\&space;x_{_2}^{_t&plus;_1}&space;\\&space;\vdots\\&space;x_{_n}^{_t&plus;_1}&space;\\&space;\end{pmatrix}&space;=&space;\begin{pmatrix}&space;\phi_{_{11}}&space;^{_t}&&space;0&space;&&space;0&space;&&space;\cdots&space;&&space;0&space;\\&space;\phi_{_{21}}^{_t}&space;&&space;\phi_{_{22}}^{_t}&space;&&space;0&space;&&space;\cdots&space;&&space;0&space;\\&space;\vdots&space;&&space;\vdots&space;&&space;\vdots&space;&&space;\ddots&space;&&space;\vdots&space;\\&space;\phi_{_{n1}}^{_t}&space;&&space;\phi_{_{n2}}^{_t}&space;&&space;\phi_{_{n3}}^{_t}&space;&&space;\cdots&space;&&space;\phi_{_{nn}}^{_t}&space;\\&space;\end{pmatrix}&space;\begin{pmatrix}&space;x_{_1}^{_t}&space;\\&space;x_{_2}^{_t}&space;\\&space;\vdots\\&space;x_{_n}^{_t}&space;\\&space;\end{pmatrix}&plus;&space;\begin{pmatrix}&space;\varepsilon_{_1}^{_t}&space;\\&space;\varepsilon_{_2}^{_t}&space;\\&space;\vdots\\&space;\varepsilon_{_n}^{_t}&space;\\&space;\end{pmatrix}w_t" title="\begin{pmatrix} x_{_1}^{_t+_1} \\ x_{_2}^{_t+_1} \\ \vdots\\ x_{_n}^{_t+_1} \\ \end{pmatrix} = \begin{pmatrix} \phi_{_{11}} ^{_t}& 0 & 0 & \cdots & 0 \\ \phi_{_{21}}^{_t} & \phi_{_{22}}^{_t} & 0 & \cdots & 0 \\ \vdots & \vdots & \vdots & \ddots & \vdots \\ \phi_{_{n1}}^{_t} & \phi_{_{n2}}^{_t} & \phi_{_{n3}}^{_t} & \cdots & \phi_{_{nn}}^{_t} \\ \end{pmatrix} \begin{pmatrix} x_{_1}^{_t} \\ x_{_2}^{_t} \\ \vdots\\ x_{_n}^{_t} \\ \end{pmatrix}+ \begin{pmatrix} \varepsilon_{_1}^{_t} \\ \varepsilon_{_2}^{_t} \\ \vdots\\ \varepsilon_{_n}^{_t} \\ \end{pmatrix}w_t" /></a>
+
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=y^{_{t&plus;1}}=&space;x_{_n}^{_{t&plus;1}}&plus;v^{_{t&plus;1}}" target="_blank"><img src="https://latex.codecogs.com/png.latex?y^{_{t&plus;1}}=&space;x_{_n}^{_{t&plus;1}}&plus;v^{_{t&plus;1}}" title="y^{_{t+1}}= x_{_n}^{_{t+1}}+v^{_{t+1}}" /></a>
 
 Then we could use kalman filter to predict or filter a time sequence.
