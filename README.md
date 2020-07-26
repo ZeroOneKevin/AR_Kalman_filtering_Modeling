@@ -1,9 +1,8 @@
 AR_Kalman_filtering Model
 
 An autoregression model(AR model）could be written as
-$$
-x_{_t} = \phi_{_{n1}} x_{_{t-1}}+\phi_{_{n2}} x_{_{t-2}}+...+\phi_{_{nn}} x_{_{t-n}}+\varepsilon_t
-$$
+
+$$x_{_t} = \phi_{_{n1}} x_{_{t-1}}+\phi_{_{n2}} x_{_{t-2}}+...+\phi_{_{nn}} x_{_{t-n}}+\varepsilon_t$$
 
 Transfer multiple AR models into a state space below：
 $$
