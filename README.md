@@ -3,6 +3,7 @@ AR_Kalman_filtering Model
 An autoregression model(AR model）could be written as
 
 <a href="https://www.codecogs.com/eqnedit.php?latex=x_{t}&space;=&space;\phi{{n1}}&space;x{{t-1}}&plus;\phi{{n2}}&space;x{{t-2}}&plus;...&plus;\phi{{nn}}&space;x{_{t-n}}&plus;\varepsilon_t" target="_blank"><img src="https://latex.codecogs.com/png.latex?x_{t}&space;=&space;\phi{{n1}}&space;x{{t-1}}&plus;\phi{{n2}}&space;x{{t-2}}&plus;...&plus;\phi{{nn}}&space;x{_{t-n}}&plus;\varepsilon_t" title="x_{t} = \phi{{n1}} x{{t-1}}+\phi{{n2}} x{{t-2}}+...+\phi{{nn}} x{_{t-n}}+\varepsilon_t" /></a>
+
 Transfer multiple AR models into a state space below：
 $$
        \begin{pmatrix}
