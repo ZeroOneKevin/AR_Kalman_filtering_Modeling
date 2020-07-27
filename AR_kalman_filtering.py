@@ -29,11 +29,11 @@ def AR_model(trainset):#用于建立AR模型并转为状态空间
     transition_matrices[7,:8] = AR8.arparams[::-1]
     return observation_matrices,transition_matrices
 
-def kalman_filter(observation_matrices,transition_matrices,trainset,data):#卡尔曼滤波进行过滤
+def kalman_filter(observation_matrices,transition_matrices,trainset,data,end_time):#卡尔曼滤波进行过滤
     kf = KalmanFilter(transition_matrices=transition_matrices, observation_matrices=observation_matrices)
     kf.em(trainset)
     filter_mean, filter_cov = kf.filter(trainset)
-    index1 = np.where(data.index.month == 4)[0][0]
+    index1 = np.where(data.index.month == end_time)[0][0]
     for i in range(index1, len(data)):
         next_filter_mean, next_filter_cov = kf.filter_update(
             filtered_state_mean=filter_mean[-1],
@@ -41,14 +41,14 @@ def kalman_filter(observation_matrices,transition_matrices,trainset,data):#卡�
             observation=data[i])
         filter_mean = np.vstack((filter_mean, next_filter_mean))
         filter_cov = np.vstack((filter_cov, next_filter_cov.reshape(1, 8, 8)))
-    AR_kalman_filter = pd.Series(filter_mean[index1:, 7], index=data.index[index1:])
+    AR_kalman_filter = pd.Series(filter_mean[index1:, 7], index=data.index[index1:])#filter_mean的最后一列为当日的过滤结果
     return AR_kalman_filter
 
-def kalman_filter_forcast(observation_matrices,transition_matrices,trainset,data):#卡尔曼滤波进行预测
+def kalman_filter_forcast(observation_matrices,transition_matrices,trainset,data,end_time):#卡尔曼滤波进行预测
     kf = KalmanFilter(transition_matrices=transition_matrices, observation_matrices=observation_matrices)
     kf.em(trainset)
     filter_mean, filter_cov = kf.filter(trainset)
-    index1 = np.where(data.index.month == 4)[0][0]
+    index1 = np.where(data.index.month == end_time)[0][0]
 
     for i in range(index1, len(data)):
         next_filter_mean, next_filter_cov = kf.filter_update(
@@ -57,8 +57,7 @@ def kalman_filter_forcast(observation_matrices,transition_matrices,trainset,data
                 observation=data[i])
         filter_mean = np.vstack((filter_mean, next_filter_mean))
         filter_cov = np.vstack((filter_cov, next_filter_cov.reshape(1, 8, 8)))
-    AR_kalman_forcast = np.matmul(np.array(filter_mean) , transition_matrices[7,:])
-    # AR_kalman_forcast = pd.Series(AR_kalman_forcast[:-1],index=df.index[1:])
+    AR_kalman_forcast = np.matmul(np.array(filter_mean) , transition_matrices[7,:])#相当于用AR(8)来预测
     return AR_kalman_forcast
 
 filename = '600900.SS.csv'
@@ -74,20 +73,21 @@ df = df['2019']
 # 先一阶差分再过滤
 # observation_matrices,transition_matrices = AR_model(df.Close_diff1[:'2019-3'])
 # Close_diff1_AR_kalman_filter = kalman_filter(observation_matrices,transition_matrices,
-#                                           df.Close_diff1[:'2019-3'],df.Close_diff1)
+#                                           df.Close_diff1[:'2019-3'],df.Close_diff1,end_time=4)
 # Close_AR_kalman_filter = df['Close']['2019-4':] + Close_diff1_AR_kalman_filter
 
 #直接过滤
 # observation_matrices,transition_matrices = AR_model(df.Close[:'2019-3'])
 # Close_AR_kalman_filter = kalman_filter(observation_matrices,transition_matrices,
-#                                            df.Close[:'2019-3'],df.Close)
+#                                            df.Close[:'2019-3'],df.Close,end_time=4)
 
-#预测
-observation_matrices,transition_matrices = AR_model(df.Close_diff1[:'2019-3'])
+#先差分，用差分序列回归之后预测
+observation_matrices,transition_matrices = AR_model(df.Close_diff1[:'2019-3'])#用前三个月的数据做自回归求出系数
 Close_diff1_AR_kalman_forcast = kalman_filter_forcast(observation_matrices,transition_matrices,
-                                          df.Close_diff1[:'2019-3'],df.Close_diff1)
+                                          df.Close_diff1[:'2019-3'],df.Close_diff1,end_time=4)
 Close_diff1_AR_kalman_forcast = pd.Series(Close_diff1_AR_kalman_forcast,index=df.index)
 Close_AR_kalman_forcast = df['Close'] + Close_diff1_AR_kalman_forcast
+Close_AR_kalman_forcast = pd.Series(Close_AR_kalman_forcast.iloc[:-1].values,index=Close_AR_kalman_forcast.index[1:])
 
 my_color = mpf.make_marketcolors(up='red',
                                  down='green',
@@ -104,10 +104,10 @@ my_style = mpf.make_mpf_style(gridaxis='both',
 # add_plot = [mpf.make_addplot(Close_AR_kalman_filter,linestyle='solid',color='y'),
 #             mpf.make_addplot(df.ema12['2019-4':],linestyle='solid',color='b')]
 
-add_plot = [mpf.make_addplot(Close_AR_kalman_forcast['2019-4':],linestyle='solid',color='y'),
-            mpf.make_addplot(df.ema12['2019-4':],linestyle='solid',color='b')]
+add_plot = [mpf.make_addplot(Close_AR_kalman_forcast['2019-4-2':],linestyle='solid',color='y'),
+            mpf.make_addplot(df.ema12['2019-4-2':],linestyle='solid',color='b')]
 
-mpf.plot(df['2019-4':],type='candle',
+mpf.plot(df['2019-4-2':],type='candle',
          style=my_style,
          addplot=add_plot,
          volume=True,
